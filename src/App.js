@@ -4,7 +4,7 @@ import { RecipeHomePage } from './features'
 
 function App() {
   return (
-    <div>Hello World</div>
+    <RecipeHomePage />
   );
 }
 
