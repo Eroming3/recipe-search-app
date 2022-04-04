@@ -16,7 +16,6 @@ class RecipeHomePage extends React.Component {
             search: "",
             appID: "b14a6eda",
             appKEY: "46d921afdb1491f1b84efdfdc7de03b2",
-            searchState: false
         }
     }
 
@@ -34,11 +33,9 @@ class RecipeHomePage extends React.Component {
         const key = this.state.appKEY;
         RecipesService.GetRecipes(query,id,key).then(data => {
             this.setState({
-                recipes: data,
-                searchState: true
+                recipes: data.hits       
             })
             console.log(this.state.recipes);
-            console.log(this.state.searchState);
         },
         (error) => {
             console.log(error(error.toString()))
@@ -47,81 +44,93 @@ class RecipeHomePage extends React.Component {
     }
 
     render () {
-        if(this.state.searchState == false) {
-            return (
-                <div className="app-page-container mt-5">
+        return (
+            <div className="app-page-container mt-5">
                 <Row>
-                        <Col span={12}>
-                            <div>
-                                <h1>Recipe Search App</h1>
-                            </div>
-                        </Col>
-                        <Col span={8}>
-                            <Input
-                                type="text"
-                                placeholder="Search Recipe Here"
-                                value= {this.state.search}
-                                onChange={(e) => this.handleUpdateSearch(e)}
-                            />
-                        </Col>
-                        <Col>
-                            <Button className="primary-btn" onClick={() => this.getRecipes()}>
-                                Search
-                            </Button>
-                        </Col>
-                    </Row>
-                </div>
-            );
-        }   
-
-        else{
-            return (
-                <div className="app-page-container mt-5">
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                        <div>
+                            <h1>Recipe Search App</h1>
+                        </div>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12}>
+                        <Input
+                            suffix={
+                                <Button className="primary-btn" onClick={() => this.getRecipes()}>
+                                    Search
+                                </Button> 
+                            }
+                            type="text"
+                            placeholder="Search Recipe Here"
+                            value= {this.state.search}
+                            onChange={(e) => this.handleUpdateSearch(e)}
+                        />
+                    </Col>
+                </Row>
                 <Row>
-                        <Col span={12}>
-                            <div>
-                                <h1>Recipe Search App</h1>
-                            </div>
-                        </Col>
-                        <Col span={8}>
-                            <Input
-                                type="text"
-                                placeholder="Search Recipe Here"
-                                value= {this.state.search}
-                                onChange={(e) => this.handleUpdateSearch(e)}
-                            />
-                        </Col>
-                        <Col>
-                            <Button className="primary-btn" onClick={() => this.getRecipes()}>
-                                Search
-                            </Button>
-                        </Col>
-                    </Row>
+                    <Col span={24}>
                         {
                             this.state.recipes.map((recipe) => (
                                 <div className="brew-card card-align">
                                     <Row gutter={[16, 16]} className="p-3 ml-4" style={{ width: '95%' }}>
-                                        <Col span={24}>
-                                            <FontAwesomeIcon
-                                                className="beer float-right"
-                                                icon={faBeer}
-                                                size="3x"
-                                            />
+                                        <Col span={12}>
+                                            <div
+                                                className="float-left"
+                                                style={{ cursor: 'pointer', width: '25%' }}
+                                            >
+                                                <img
+                                                    alt="placeholder"
+                                                    className="img-fit"
+                                                    src={recipe.recipe.image}
+                                                />
+                                            </div>
+                                        </Col>       
+                                        <Col span={12}>
                                             <div
                                                 className="card-title"
                                             >
                                                 <div className="d-flex">
-                                                 <span>{recipe.label}</span>
+                                                    <span>{recipe.recipe.label}</span>
                                                 </div>
-                                             </div>
+                                            </div>
+                                            <div>
+                                                {recipe.recipe.url}
+                                            </div>
                                         </Col>
-                                    </Row>   
+                                        <Col span={24}>
+                                            <hr />
+                                            <div className="d-inline-flex">
+                                                <div>
+                                                    <div className="sub-title">
+                                                        Dish Type
+                                                    </div>
+                                                    <p className="ml-0">
+                                                       {recipe.recipe.dishType[0]}
+                                                    </p>
+                                                </div>
+                                                <div className="ml-4">
+                                                <span className="sub-title">
+                                                    Calories
+                                                </span>
+                                                    {Math.round(recipe.recipe.calories)}
+                                                </div>
+                                            </div>
+                                            {/* <div className="float-right">
+                                                <Button className="primary-btn" onClick={() => this.handleNavigate(brewery.id)}>
+                                                    View Details
+                                                </Button>
+                                            </div> */}
+                                        </Col>
+                                    </Row>
                                 </div>
+                            
                             ))
                         }
-                </div>
-            );
-        }      
+                    </Col>
+                </Row>
+
+            </div>
+
+        );      
     }
 }
 
